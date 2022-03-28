@@ -12,7 +12,7 @@
 	<artifactId>queue-application</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>queue-application</name>
-	<description>This app provides you to store the information in queue and get it in convenient way throgh the API</description>
+	<description>This app provides you to store the information in queue and get it in convenient way through the API</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
