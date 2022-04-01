@@ -1,38 +1,38 @@
 package queueapplication.pojo;
 
-public class Message {
-    private String message;
-    private String topicName;
-    private int offset;
-    private int valueSize;
+import java.sql.Timestamp;
 
-    public Message(String message, String topicName) {
-        this.message = message;
+public class Message {
+    private String key;
+    private String value;
+    private Timestamp timestamp;
+    private String topicName;
+
+    public Message(String key, String value,String topicName) {
+        this.key = key;
+        this.value = value;
+        this.timestamp = new Timestamp(System.nanoTime());
         this.topicName = topicName;
     }
 
-    public String getMessage() {
-        return message;
+    public Message(Message message){
+        this(message.getKey(), message.getValue(), message.getTopicName());
+        this.timestamp = message.getTimestamp();
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
     public String getTopicName() {
         return topicName;
-    }
-
-    public int getOffset() {
-        return offset;
-    }
-
-    public int getValueSize() {
-        return valueSize;
-    }
-
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("offset:%d  message:%s ",offset,message);
     }
 }

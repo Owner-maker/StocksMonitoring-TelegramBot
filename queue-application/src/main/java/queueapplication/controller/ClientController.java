@@ -1,32 +1,58 @@
 package queueapplication.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import queueapplication.handler.LogFileHandler;
-import queueapplication.pojo.Message;
+import queueapplication.exception.ConsumerNotFoundException;
+import queueapplication.exception.FileWriteException;
+import queueapplication.exception.TopicNotFoundException;
+import queueapplication.handler.PartitionHandler;
 import queueapplication.handler.TopicHandler;
+import queueapplication.pojo.Consumer;
+import queueapplication.pojo.Message;
+import queueapplication.service.Queue;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/queue")
 public class ClientController {
-//    @PostMapping("/init")
-//    public UUID initQueue(){
-//    }
 
-    @PostMapping("/createtopic")
-    public String createTopic(@RequestParam String name){
-        TopicHandler.createTopic(name);
+    @Autowired
+    private Queue queue;
+
+    @ExceptionHandler({FileWriteException.class, IOException.class})
+    @PostMapping("/createTopic")
+    public String createTopic(@RequestParam String topicName, @RequestParam String partitions) throws IOException {
+        TopicHandler.createTopic(topicName);
+
+        var amountOfPartitions = Integer.parseInt(partitions);
+        if(amountOfPartitions !=0){
+            PartitionHandler.createPartitionsInTopic(topicName, amountOfPartitions);
+        }
         return "OK";
     }
 
-    @PostMapping("/sendmessage")
-    public String sendMessageToTopic(@RequestParam String nametopic, @RequestParam String message){
-        Message messageToStore = new Message(message,nametopic);
-        LogFileHandler.storeMessageInTopic(messageToStore);
+    @PostMapping("/createConsumer")
+    public String createConsumer(@RequestParam String userId){
+        queue.addConsumer(new Consumer(userId));
         return "OK";
     }
 
-    @GetMapping("/getmessage/{nametopic}")
-    public String getMessageFromTopic(@PathVariable String nametopic){
-        return null;
+    @PostMapping("/subscribeConsumerToTopic")
+    public String subscribeConsumerToTopic(@RequestParam String userId, String topicName){
+        queue.getConsumer(userId).updateOffsetInTopic(topicName, Consumer.INITIAL_OFFSET);
+        return "OK";
+    }
+
+    @PostMapping("/sendMessage")
+    public String sendMessageToTopic(@RequestParam String topicName, @RequestParam String userId, @RequestParam String value){
+        queue.addMessageToCache(new Message(userId,value,topicName));
+        return "OK";
+    }
+
+    @ExceptionHandler({ConsumerNotFoundException.class, TopicNotFoundException.class})
+    @GetMapping("/getMessage")
+    public Message getMessageFromTopic(@RequestParam String topicName, @RequestParam String userId) throws ConsumerNotFoundException, TopicNotFoundException {
+        return queue.getMessageFromCache(userId,topicName);
     }
 }

@@ -1,25 +1,41 @@
 package queueapplication.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import queueapplication.pojo.Consumer;
 import queueapplication.pojo.Message;
-import queueapplication.pojo.Topic;
+import queueapplication.service.Queue;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
+@Component
 public class LogFileHandler {
-    public static int offsetCount = 0;
+    private LogFileHandler() {
+    }
 
-    public static void storeMessageInTopic(Message message){
-        File logFileToStoreMessage = new File(String.format("%s\\%s\\%s",TopicHandler.CURRENT_USER_TOPICS_DIRECTORY, message.getTopicName(),TopicHandler.BASIC_LOG_FILE_NAME_OF_TOPIC));
-        System.out.println(logFileToStoreMessage);
-        try(FileWriter writer = new FileWriter(logFileToStoreMessage,true)){
-            message.setOffset(offsetCount++);
-            writer.write(message.toString());
-            writer.append('\n');
+    public static void createSegmentForConsumer(Queue queue, Consumer consumer,String topicName) throws IOException {
+        var pathToTopic = Paths.get(String.format("%s\\%s", QueueHandler.CURRENT_USER_LOGS_DIRECTORY, topicName));
+
+        var segmentFile = new File(String.format("%s\\%s\\0.log",String.valueOf(pathToTopic),consumer.getId()));
+        segmentFile.createNewFile();      //     ------ handle the possible exceptions in further ------
+    }
+
+    public static void storeMessageInTopic(Message message, int offset, Consumer consumer) throws IOException {
+        var pathToSegment = Paths.get(String.format("%s\\%s\\%s\\0.log", QueueHandler.CURRENT_USER_LOGS_DIRECTORY,
+                message.getTopicName(),message.getKey()));
+        File file = new File(String.valueOf(pathToSegment));
+
+        try(FileWriter fileWriter = new FileWriter(file,true)){
+            fileWriter.append(String.format("offset: %d keyvalue: %s value: %s timestamp: %s",offset,message.getKey(), message.getValue(),message.getTimestamp()));
+            fileWriter.append("\n");
+            fileWriter.flush();
         }
-        catch (IOException e) {
-            System.err.println(String.format("Message {%s} was not added to the queue",message.toString()));
+        catch (IOException ioException){
+
         }
     }
 }
