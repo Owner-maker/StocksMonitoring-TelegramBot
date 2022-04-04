@@ -1,5 +1,6 @@
 package queueapplication.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import queueapplication.config.QueueAddingMessagesState;
@@ -16,6 +17,11 @@ import java.util.Map;
 @Service
 @Scope("singleton")
 public class Queue {
+
+    @Autowired
+    BrokersInfo brokersInfo;
+
+
     public static final int BATCH_SIZE = 10;
     public QueueAddingMessagesState state = QueueAddingMessagesState.KEY_DEFINED;
 
