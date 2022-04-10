@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/queue")
-public class ClientController {
+public class QueueManagerController {
 
     @Autowired
     private Queue queue;

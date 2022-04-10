@@ -1,9 +1,15 @@
 package queueapplication.service;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import queueapplication.pojo.Broker;
+import queueapplication.pojo.Topic;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,22 +21,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
-@Scope("singleton")
-public class BrokersInfo {
+public final class BrokersInfoLoader {
     private static final String BROKERS_XML_FILE_PATH = String.format("%s%s", System.getProperty("user.dir"), "\\src\\main\\resources\\static\\config\\brokers.xml");
-    private final List<String> brokerList;
+    private static final String BROKER_ITEM_XML_TAG_NAME = "broker";
+    private static final String BROKER_ADDRESS_ITEM_XML_TAG_NAME = "address";
+    private static final List<String> brokersAddresses;
 
-    public BrokersInfo(){
-        this.brokerList = getBrokersAddresses();
+    static {
+        brokersAddresses = getBrokersURLAddressesFromXML();
     }
 
-    public List<String> getList() {
-        return brokerList;
+    public BrokersInfoLoader() {
     }
 
-    private static List<String> getBrokersAddressesFromXML() {
+    private static List<String> getBrokersURLAddressesFromXML() {
         var builderFactory = DocumentBuilderFactory.newInstance();
 
         try {
@@ -39,13 +46,13 @@ public class BrokersInfo {
 
             var document = builder.parse(new File(BROKERS_XML_FILE_PATH));
             document.getDocumentElement().normalize();
-            var nodeList = document.getElementsByTagName("broker");
+            var nodeList = document.getElementsByTagName(BROKER_ITEM_XML_TAG_NAME);
 
             var brokersAddressesFromXML = new ArrayList<String>();
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Element broker = (Element) nodeList.item(i);
-                if (broker.hasAttribute("address")) {
-                    String brokerAddress = broker.getAttribute("address");
+                if (broker.hasAttribute(BROKER_ADDRESS_ITEM_XML_TAG_NAME)) {
+                    String brokerAddress = broker.getAttribute(BROKER_ADDRESS_ITEM_XML_TAG_NAME);
                     brokersAddressesFromXML.add(brokerAddress);
                 }
             }
@@ -57,34 +64,36 @@ public class BrokersInfo {
         return new ArrayList<>();
     }
 
-    private static boolean isBrokerAvailable(String brokerAddress) throws IOException {
-        var brokerAddressURL = new URL(brokerAddress);
+    private static boolean isBrokerAvailable(Broker broker) throws IOException {
+        var brokerAddressURL = new URL(broker.getAddressURL());
         HttpURLConnection connection = (HttpURLConnection) brokerAddressURL.openConnection();
         connection.setRequestMethod("GET");
-        try{
+        try {
             int responseCode = connection.getResponseCode();
             return responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_NOT_FOUND;  // ------------ handle the error or add to the log file ------------
         }
-        catch (ConnectException e){
+        catch (ConnectException e) {
             return false;
         }
     }
 
-    private static List<String> getBrokersAddresses() {
-        try {
-            var brokersAddressesFromXML = (ArrayList<String>) getBrokersAddressesFromXML();
-            var brokersAddresses = new ArrayList<String>();
+    public static List<Broker> getBrokersInfo(){
+        List<Broker> brokers = new ArrayList<>();
+        try{
+            for (String brokerAddress:brokersAddresses){
+                var restTemplate = new RestTemplate();
+                var url = String.format("%s/getBrokerInfo",brokerAddress);
+                ResponseEntity<Map<String,Topic>> responseEntity =restTemplate.exchange(url, HttpMethod.GET,
+                        null, new ParameterizedTypeReference<Map<String, Topic>>() {
+                        });
 
-            for (String brokerAddress : brokersAddressesFromXML) {
-                if (isBrokerAvailable(brokerAddress)) {
-                    brokersAddresses.add(brokerAddress);
-                }
+                Map<String,Topic> response =responseEntity.getBody();
+                brokers.add(new Broker(brokerAddress,response));
             }
-            return brokersAddresses;
+            return brokers;
         }
-        catch (IOException e) {
-            e.printStackTrace();                           // ------------ handle the error or add to the log file ------------
+        catch (Exception e){
         }
-        return new ArrayList<>();
+        return null;
     }
 }

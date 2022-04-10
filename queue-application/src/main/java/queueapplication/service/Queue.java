@@ -7,20 +7,20 @@ import queueapplication.config.QueueAddingMessagesState;
 import queueapplication.exception.ConsumerNotFoundException;
 import queueapplication.exception.TopicNotFoundException;
 import queueapplication.handler.batch.StateKeyDefined;
+import queueapplication.pojo.Broker;
 import queueapplication.pojo.Consumer;
 import queueapplication.pojo.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
 @Scope("singleton")
 public class Queue {
 
-    @Autowired
-    BrokersInfo brokersInfo;
-
+    private List<Broker> brokers;
 
     public static final int BATCH_SIZE = 10;
     public QueueAddingMessagesState state = QueueAddingMessagesState.KEY_DEFINED;
