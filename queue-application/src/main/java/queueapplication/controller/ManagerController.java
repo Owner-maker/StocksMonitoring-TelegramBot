@@ -5,17 +5,14 @@ import org.springframework.web.bind.annotation.*;
 import queueapplication.exception.ConsumerNotFoundException;
 import queueapplication.exception.FileWriteException;
 import queueapplication.exception.TopicNotFoundException;
-import queueapplication.handler.PartitionHandler;
-import queueapplication.handler.TopicHandler;
 import queueapplication.pojo.Consumer;
 import queueapplication.pojo.Message;
-import queueapplication.service.Queue;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/queue")
-public class QueueManagerController {
+public class ManagerController {
 
     @Autowired
     private Queue queue;

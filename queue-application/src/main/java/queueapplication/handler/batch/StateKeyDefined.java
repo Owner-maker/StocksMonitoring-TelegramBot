@@ -2,11 +2,8 @@ package queueapplication.handler.batch;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import queueapplication.handler.QueueHandler;
 import queueapplication.pojo.Message;
-import queueapplication.service.Queue;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
 @Component

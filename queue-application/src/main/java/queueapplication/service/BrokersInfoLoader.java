@@ -94,6 +94,10 @@ public final class BrokersInfoLoader {
         }
         catch (Exception e){
         }
-        return null;
+        return new ArrayList<>();
+    }
+
+    public static List<String> getBrokersAddresses(){
+        return new ArrayList<>(brokersAddresses);
     }
 }
