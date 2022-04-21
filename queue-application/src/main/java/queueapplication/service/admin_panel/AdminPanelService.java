@@ -1,4 +1,4 @@
-package queueapplication.service;
+package queueapplication.service.admin_panel;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -47,8 +47,13 @@ public final class AdminPanelService {
                 System.out.println("partition quantity: ");
                 int partitionQuantity = scanner.nextInt();
 
-                commandFacade.processAdminCommand(new AdminCommand(commandCode,topicName,isCreatingInSingleBroker,
+                boolean result = commandFacade.processAdminCommand(new AdminCommand(commandCode,topicName,isCreatingInSingleBroker,
                         partitionQuantity,singleBrokerAddress));
+                if (result){
+                    System.out.println("Success");
+                }else{
+                    System.out.println("Some troubles");
+                }
                 break;
             default:
                 System.err.println("Wrong command code");

@@ -2,14 +2,14 @@ package queueapplication.handler.adminpanel;
 
 import org.springframework.stereotype.Component;
 import queueapplication.handler.adminpanel.model.AdminCommand;
-import queueapplication.service.BrokersInfoLoader;
+import queueapplication.service.broker.BrokersInfoLoader;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Component
 public class AvailableBrokersHandler implements AdminCommandHandler{
 
-    private static final AdminCommandType ADMIN_COMMAND_TYPE = AdminCommandType.SHOW_AVAILABLE_BROKERS_ADDRESSES;
+    private static final AdminCommandType ADMIN_COMMAND_TYPE = AdminCommandType.AVAILABLE_BROKERS_ADDRESSES;
 
     @Override
     public AdminCommandType getAdminCommandHandler() {
@@ -18,7 +18,9 @@ public class AvailableBrokersHandler implements AdminCommandHandler{
 
     @Override
     public boolean handleAdminCommand(AdminCommand command) {
-        List<String> brokersAddresses = BrokersInfoLoader.getBrokersAddresses();
+        var brokersAddresses = new ArrayList<String>();
+        BrokersInfoLoader.getBrokers().forEach(broker -> brokersAddresses.add(broker.getAddressURL()));
+
         if(!brokersAddresses.isEmpty()){
             var builder = new StringBuilder();
             builder.append("\nAvailable brokers:\n");

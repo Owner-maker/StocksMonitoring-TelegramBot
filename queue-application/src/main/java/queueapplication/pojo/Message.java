@@ -7,17 +7,14 @@ public class Message {
     private String value;
     private Timestamp timestamp;
     private String topicName;
+    private int partitionNumber;
 
-    public Message(String key, String value,String topicName) {
+    public Message(String key, String value, Timestamp timestamp, String topicName, int partitionNumber) {
         this.key = key;
         this.value = value;
-        this.timestamp = new Timestamp(System.nanoTime());
+        this.timestamp = timestamp;
         this.topicName = topicName;
-    }
-
-    public Message(Message message){
-        this(message.getKey(), message.getValue(), message.getTopicName());
-        this.timestamp = message.getTimestamp();
+        this.partitionNumber = partitionNumber;
     }
 
     public String getKey() {
@@ -34,5 +31,14 @@ public class Message {
 
     public String getTopicName() {
         return topicName;
+    }
+
+    public int getPartitionNumber() {
+        return partitionNumber;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("key: %s timestamp: %s timestamp: %s\n",key,timestamp,value);
     }
 }

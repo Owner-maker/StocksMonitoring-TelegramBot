@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public enum AdminCommandType {
     MENU("menu"),
-    SHOW_AVAILABLE_BROKERS_ADDRESSES("brokers"),
+    AVAILABLE_BROKERS_ADDRESSES("brokers"),
     CREATE("create");
 
 

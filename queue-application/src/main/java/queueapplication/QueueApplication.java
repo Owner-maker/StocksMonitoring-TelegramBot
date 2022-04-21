@@ -3,7 +3,7 @@ package queueapplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import queueapplication.handler.adminpanel.model.AdminCommand;
-import queueapplication.service.AdminPanelService;
+import queueapplication.service.admin_panel.AdminPanelService;
 
 import java.util.Scanner;
 

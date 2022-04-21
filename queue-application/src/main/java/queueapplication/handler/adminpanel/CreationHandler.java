@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import queueapplication.handler.adminpanel.model.AdminCommand;
-import queueapplication.service.BrokersInfoLoader;
+import queueapplication.service.broker.BrokersInfoLoader;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -26,23 +26,24 @@ public class CreationHandler implements AdminCommandHandler {
     @Override
     public boolean handleAdminCommand(AdminCommand command) {
         try {
-            List<String> brokerAddresses = new ArrayList<>();
+                List<String> brokerAddresses = new ArrayList<>();
             int partitionQuantity = command.getPartitionQuantity();
             String topicName = command.getTopicName();
 
 
             if (command.isCreatingInSingleBroker()) {
-                brokerAddresses.add(BrokersInfoLoader.getBrokersAddresses().stream().
-                        filter(address -> address.equals(command.getSingleBrokerAddress())).findFirst().orElseThrow());
+                brokerAddresses.add(BrokersInfoLoader.getBrokers().stream().
+                        filter(broker -> broker.getAddressURL().equals(command.getSingleBrokerAddress())).findFirst().get().getAddressURL());
+                System.out.println(brokerAddresses.get(0));
             }
             else {
-                brokerAddresses = BrokersInfoLoader.getBrokersAddresses();
+                BrokersInfoLoader.getBrokersInfo().forEach(broker -> brokerAddresses.add(broker.getAddressURL()));
             }
 
             for (String brokerAddress : brokerAddresses) {
                 var restTemplate = new RestTemplate();
                 var url = String.format(
-                        "%s/createTopicAndPartitions?topicName=%s&partitionQuantity=%s", brokerAddress, topicName, partitionQuantity);
+                            "%s/create?topicName=%s&partitionQuantity=%s", brokerAddress, topicName, partitionQuantity);
                 ResponseEntity<Integer> responseEntity = restTemplate.exchange(url, HttpMethod.POST,
                         null, new ParameterizedTypeReference<>() {
                         });
@@ -51,6 +52,7 @@ public class CreationHandler implements AdminCommandHandler {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
 
