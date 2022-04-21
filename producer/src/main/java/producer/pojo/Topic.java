@@ -1,4 +1,4 @@
-package queuenode0.pojo;
+package producer.pojo;
 
 public class Topic {
     private String name;
@@ -28,4 +28,3 @@ public class Topic {
         this.partitionQuantity = partitionQuantity;
     }
 }
-
