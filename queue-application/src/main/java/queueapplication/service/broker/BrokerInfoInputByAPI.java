@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class BrokerAPIInfoInput implements DataInput<Optional<List<Broker>>, List<String>> {
+public class BrokerInfoInputByAPI implements DataInput<Optional<List<Broker>>, List<String>> {
 
     public boolean isBrokerAvailable(String url, int timeout) {
         try {
@@ -38,8 +38,8 @@ public class BrokerAPIInfoInput implements DataInput<Optional<List<Broker>>, Lis
     @Override
     public Optional<List<Broker>> getData(List<String> brokersAddresses) {
         List<Broker> brokers = new ArrayList<>();
-        try {
-            for (String brokerAddress : brokersAddresses) {
+        for (String brokerAddress : brokersAddresses) {
+            try {
                 var restTemplate = new RestTemplate();
                 var url = String.format("%s/getBrokerInfo", brokerAddress);
                 ResponseEntity<Map<String, Topic>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
@@ -49,9 +49,8 @@ public class BrokerAPIInfoInput implements DataInput<Optional<List<Broker>>, Lis
                 Map<String, Topic> response = responseEntity.getBody();
                 brokers.add(new Broker(brokerAddress, response));
             }
-        }
-        catch (RestClientException e) {
-            brokers = null;
+            catch (RestClientException e) {
+            }
         }
         return Optional.ofNullable(brokers);
     }

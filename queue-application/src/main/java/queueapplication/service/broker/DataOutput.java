@@ -1,5 +1,5 @@
 package queueapplication.service.broker;
 
-public interface DataOutput<T> {
-    void write(T data);
+public interface DataOutput<R, S, D> {
+    R create(S destination, D data);
 }

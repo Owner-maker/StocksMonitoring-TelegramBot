@@ -1,6 +1,5 @@
 package queueapplication.service.admin_panel;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import queueapplication.handler.adminpanel.AdminCommandFacade;
 import queueapplication.handler.adminpanel.model.AdminCommand;
@@ -8,7 +7,6 @@ import queueapplication.handler.adminpanel.model.AdminCommand;
 import java.util.Scanner;
 
 @Service
-@Scope("singleton")
 public final class AdminPanelService {
 
     private final AdminCommandFacade commandFacade;
@@ -47,12 +45,12 @@ public final class AdminPanelService {
                 System.out.println("partition quantity: ");
                 int partitionQuantity = scanner.nextInt();
 
-                boolean result = commandFacade.processAdminCommand(new AdminCommand(commandCode,topicName,isCreatingInSingleBroker,
+                var result = commandFacade.processAdminCommand(new AdminCommand(commandCode,topicName,isCreatingInSingleBroker,
                         partitionQuantity,singleBrokerAddress));
                 if (result){
                     System.out.println("Success");
                 }else{
-                    System.out.println("Some troubles");
+                    System.err.println("Some troubles");
                 }
                 break;
             default:

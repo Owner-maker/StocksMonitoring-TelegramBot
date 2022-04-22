@@ -1,7 +1,5 @@
 package queueapplication.service.broker;
 
-import org.springframework.beans.factory.annotation.Lookup;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import queueapplication.pojo.Broker;
 
@@ -14,10 +12,8 @@ public class BrokerData {
     private final DataInput<Optional<List<String>>,String> addressesInputXML;
     private final DataInput<Optional<List<Broker>>, List<String>> infoInputAPI;
 
-    private final List<Broker> brokers;
-
-    public BrokerData(DataInput<Optional<List<String>>, String> addressesInputXML,
-                      DataInput<Optional<List<Broker>>, List<String>> infoInputAPI) {
+    public BrokerData(BrokerAddressesInputFromXML addressesInputXML,
+                      BrokerInfoInputByAPI infoInputAPI) {
         this.addressesInputXML = addressesInputXML;
         this.infoInputAPI = infoInputAPI;
     }

@@ -16,7 +16,6 @@ import java.util.Optional;
 @Service
 public class BrokerAddressesInputFromXML implements DataInput<Optional<List<String>>,String> {
     public static final String BROKERS_XML_FILE_PATH = String.format("%s%s", System.getProperty("user.dir"), "\\src\\main\\resources\\static\\config\\brokers.xml");
-    public
 
     @Override
     public Optional<List<String>> getData(String path) {

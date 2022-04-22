@@ -1,61 +1,53 @@
 package queueapplication.handler.adminpanel;
 
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import queueapplication.handler.adminpanel.model.AdminCommand;
-import queueapplication.service.broker.BrokersInfoLoader;
+import queueapplication.pojo.BrokerInfoCreation;
+import queueapplication.service.broker.BrokerData;
+import queueapplication.service.broker.BrokerOutputDataByAPI;
+import queueapplication.service.broker.DataOutput;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CreationHandler implements AdminCommandHandler {
+public class CreationHandler implements AdminCommandHandler{
 
     private static final AdminCommandType ADMIN_COMMAND_TYPE = AdminCommandType.CREATE;
+    private final BrokerData brokerData;
+    private final DataOutput<HttpStatus, String, BrokerInfoCreation> brokerOutputData;
+
+    public CreationHandler(BrokerData brokerData, BrokerOutputDataByAPI brokerOutputData) {
+        this.brokerData = brokerData;
+        this.brokerOutputData = brokerOutputData;
+    }
 
     @Override
     public AdminCommandType getAdminCommandHandler() {
         return ADMIN_COMMAND_TYPE;
     }
 
-
     @Override
     public boolean handleAdminCommand(AdminCommand command) {
-        try {
-                List<String> brokerAddresses = new ArrayList<>();
-            int partitionQuantity = command.getPartitionQuantity();
-            String topicName = command.getTopicName();
+        List<String> brokerAddresses = new ArrayList<>();
+        boolean result = true;
 
-
-            if (command.isCreatingInSingleBroker()) {
-                brokerAddresses.add(BrokersInfoLoader.getBrokers().stream().
-                        filter(broker -> broker.getAddressURL().equals(command.getSingleBrokerAddress())).findFirst().get().getAddressURL());
-                System.out.println(brokerAddresses.get(0));
-            }
-            else {
-                BrokersInfoLoader.getBrokersInfo().forEach(broker -> brokerAddresses.add(broker.getAddressURL()));
-            }
-
-            for (String brokerAddress : brokerAddresses) {
-                var restTemplate = new RestTemplate();
-                var url = String.format(
-                            "%s/create?topicName=%s&partitionQuantity=%s", brokerAddress, topicName, partitionQuantity);
-                ResponseEntity<Integer> responseEntity = restTemplate.exchange(url, HttpMethod.POST,
-                        null, new ParameterizedTypeReference<>() {
-                        });
-
-                return responseEntity.getStatusCodeValue() == HttpURLConnection.HTTP_OK;
-            }
+        if (command.isCreatingInSingleBroker()) {
+            brokerAddresses.add(brokerData.getBrokers().stream().
+                    filter(broker -> broker.getAddressURL().equals(command.getSingleBrokerAddress())).
+                    findFirst().get().getAddressURL());
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        else {
+            brokerData.getBrokers().forEach(broker -> brokerAddresses.add(broker.getAddressURL()));
         }
 
-        return false;
+        for (String brokerAddress : brokerAddresses) {
+            HttpStatus httpStatus = brokerOutputData.create(brokerAddress, new BrokerInfoCreation(command.getTopicName(), command.getPartitionQuantity()));
+            if (httpStatus.value() != HttpStatus.OK.value()) {
+                result = false;
+            }
+        }
+        return result;
     }
 }

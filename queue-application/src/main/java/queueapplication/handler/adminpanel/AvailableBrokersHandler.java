@@ -2,7 +2,7 @@ package queueapplication.handler.adminpanel;
 
 import org.springframework.stereotype.Component;
 import queueapplication.handler.adminpanel.model.AdminCommand;
-import queueapplication.service.broker.BrokersInfoLoader;
+import queueapplication.service.broker.BrokerData;
 
 import java.util.ArrayList;
 
@@ -10,6 +10,11 @@ import java.util.ArrayList;
 public class AvailableBrokersHandler implements AdminCommandHandler{
 
     private static final AdminCommandType ADMIN_COMMAND_TYPE = AdminCommandType.AVAILABLE_BROKERS_ADDRESSES;
+    private BrokerData brokerData;
+
+    public AvailableBrokersHandler(BrokerData brokerData) {
+        this.brokerData = brokerData;
+    }
 
     @Override
     public AdminCommandType getAdminCommandHandler() {
@@ -19,18 +24,18 @@ public class AvailableBrokersHandler implements AdminCommandHandler{
     @Override
     public boolean handleAdminCommand(AdminCommand command) {
         var brokersAddresses = new ArrayList<String>();
-        BrokersInfoLoader.getBrokers().forEach(broker -> brokersAddresses.add(broker.getAddressURL()));
+        brokerData.getBrokers().forEach(broker -> brokersAddresses.add(broker.getAddressURL()));
 
-        if(!brokersAddresses.isEmpty()){
+        if (!brokersAddresses.isEmpty()) {
             var builder = new StringBuilder();
             builder.append("\nAvailable brokers:\n");
 
-            for(String brokerAddress: brokersAddresses){
-                builder.append(String.format("%s%n",brokerAddress));
+            for (String brokerAddress : brokersAddresses) {
+                builder.append(String.format("%s%n", brokerAddress));
             }
             System.out.println(builder);
         }
-        else{
+        else {
             System.err.println("There are not any available brokers in cluster");
         }
 

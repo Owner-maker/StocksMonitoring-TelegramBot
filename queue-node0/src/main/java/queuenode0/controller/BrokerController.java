@@ -1,6 +1,7 @@
 package queuenode0.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import queuenode0.handler.PartitionHandler;
 import queuenode0.handler.SegmentHandler;
@@ -43,28 +44,28 @@ public class BrokerController {
     }
 
     @PostMapping("/create")
-    public Integer createTopic(@RequestParam String topicName, @RequestParam String partitionQuantity){
+    public HttpStatus createTopic(@RequestParam String topicName, @RequestParam String partitionQuantity){
         try{
             topicHandler.createTopic(topicName);
             partitionHandler.createPartitionsInTopic(topicName,Integer.parseInt(partitionQuantity));
         }
         catch (IOException e){
             e.printStackTrace();
-            return HttpURLConnection.HTTP_INTERNAL_ERROR;
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return HttpURLConnection.HTTP_OK;
+        return HttpStatus.OK;
     }
 
     @PostMapping("/addMessage")
-    public Integer addMessage(@RequestBody Message message){
+    public HttpStatus addMessage(@RequestBody Message message){
         try{
             segmentHandler.addMessage(message);
         }
         catch(Exception e){
             e.printStackTrace();
-            return HttpURLConnection.HTTP_INTERNAL_ERROR;
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return HttpURLConnection.HTTP_OK;
+        return HttpStatus.OK;
     }
 
     @GetMapping("/getOffsets")

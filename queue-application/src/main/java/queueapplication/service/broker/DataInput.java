@@ -1,5 +1,5 @@
 package queueapplication.service.broker;
 
-public interface DataInput<T,E> {
-    T getData(E inputData);
+public interface DataInput<D, S> {
+    D getData(S source);
 }
