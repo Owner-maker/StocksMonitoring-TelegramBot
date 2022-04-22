@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Component
-@Scope("singleton")
 public class TopicHandler {
 
     public void createTopic(String topicName) throws FileWriteException {

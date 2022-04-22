@@ -1,15 +1,15 @@
-package queue_broker_0.pojo;
+package queue_broker_0.pojo.message;
 
 import java.sql.Timestamp;
 
-public class Message {
+public class MessageInputInfo {
     private String key;
     private String value;
     private Timestamp timestamp;
     private String topicName;
     private int partitionNumber;
 
-    public Message(String key, String value, Timestamp timestamp, String topicName, int partitionNumber) {
+    public MessageInputInfo(String key, String value, Timestamp timestamp, String topicName, int partitionNumber) {
         this.key = key;
         this.value = value;
         this.timestamp = timestamp;
@@ -59,6 +59,6 @@ public class Message {
 
     @Override
     public String toString() {
-        return String.format("key: %s timestamp: %s value: %s\n",key,timestamp,value);
+        return String.format("key: %s timestamp: %s value: %s%n",key,timestamp,value);
     }
 }

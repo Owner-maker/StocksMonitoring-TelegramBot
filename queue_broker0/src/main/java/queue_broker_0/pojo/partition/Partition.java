@@ -1,4 +1,4 @@
-package queue_broker_0.pojo;
+package queue_broker_0.pojo.partition;
 
 public class Partition {
     private int number;

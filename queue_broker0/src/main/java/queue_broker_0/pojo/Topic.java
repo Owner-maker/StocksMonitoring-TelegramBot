@@ -1,5 +1,7 @@
 package queue_broker_0.pojo;
 
+import queue_broker_0.pojo.partition.Partition;
+
 import java.util.ArrayList;
 import java.util.List;
 

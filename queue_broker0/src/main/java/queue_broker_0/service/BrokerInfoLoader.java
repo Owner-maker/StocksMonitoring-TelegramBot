@@ -2,7 +2,7 @@ package queue_broker_0.service;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import queue_broker_0.pojo.Partition;
+import queue_broker_0.pojo.partition.Partition;
 import queue_broker_0.pojo.Topic;
 
 import java.io.IOException;
