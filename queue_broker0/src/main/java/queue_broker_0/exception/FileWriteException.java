@@ -1,0 +1,16 @@
+package queue_broker_0.exception;
+
+import java.io.IOException;
+
+public class FileWriteException extends IOException {
+    private final String fileName;
+
+    public FileWriteException(String message, String fileName){
+        super(message);
+        this.fileName = fileName;
+    }
+
+    public String getFileName(){
+        return fileName;
+    }
+}
