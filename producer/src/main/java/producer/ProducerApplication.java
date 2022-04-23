@@ -1,11 +1,7 @@
 package producer;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import producer.pojo.Message;
-import producer.service.BrokersInfoLoader;
-import producer.service.HashSolver;
 import producer.service.MessageSender;
 
 import java.util.Scanner;

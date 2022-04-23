@@ -7,11 +7,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import producer.pojo.Message;
+import producer.pojo.Broker;
+import producer.pojo.MessageInputInfo;
 
 import java.net.HttpURLConnection;
 import java.sql.Timestamp;
-import java.util.Map;
 
 
 @Component
@@ -25,16 +25,18 @@ public class MessageSender {
         this.hashSolver = hashSolver;
     }
 
-    public boolean sendMessage(Message message){
+    public boolean sendMessage(MessageInputInfo messageInputInfo){
         String brokerAddress = loader.getBrokers().get(0).getAddressURL();
-        int partitions = loader.getBrokers().stream().findFirst().get().getTopics().get(message.getTopicName()).getPartitionQuantity();
+        int partitions = loader.getBrokers().stream().findFirst().orElse(
+                new Broker()).getTopics().get(messageInputInfo.getTopicName()).getPartitionQuantity();
 
-        int partitionNumber = hashSolver.getIndex(message.getKey(),partitions);
-        Message messageToSend = new Message(message.getKey(), message.getValue(),new Timestamp(System.nanoTime()), message.getTopicName(), partitionNumber);
+        int partitionNumber = hashSolver.getIndex(messageInputInfo.getKey(),partitions);
+        messageInputInfo.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        messageInputInfo.setPartitionNumber(partitionNumber);
         try {
             var restTemplate = new RestTemplate();
             var url = String.format("%s/addMessage", brokerAddress);
-            HttpEntity<Message> request = new HttpEntity<>(messageToSend);
+            HttpEntity<MessageInputInfo> request = new HttpEntity<>(messageInputInfo);
             ResponseEntity<Integer> responseEntity = restTemplate.exchange(url, HttpMethod.POST,
                     request, new ParameterizedTypeReference<>() {
                     });
