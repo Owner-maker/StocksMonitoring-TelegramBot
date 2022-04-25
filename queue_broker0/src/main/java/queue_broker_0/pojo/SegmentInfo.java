@@ -1,10 +1,13 @@
 package queue_broker_0.pojo;
 
-public class SegmentInfoCreation {
+public class SegmentInfo {
     private String topicName;
     private int partitionNumber;
 
-    public SegmentInfoCreation(String topicName, int partitionNumber) {
+    public SegmentInfo() {
+    }
+
+    public SegmentInfo(String topicName, int partitionNumber) {
         this.topicName = topicName;
         this.partitionNumber = partitionNumber;
     }
