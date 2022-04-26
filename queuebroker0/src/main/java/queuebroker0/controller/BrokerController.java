@@ -2,16 +2,19 @@ package queuebroker0.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import queuebroker0.handler.partition.PartitionDataGetter;
 import queuebroker0.handler.segment.MessageSender;
 import queuebroker0.handler.segment.MessageGetter;
 import queuebroker0.pojo.message.Message;
 import queuebroker0.pojo.message.MessageOutputInfo;
+import queuebroker0.pojo.partition.Partition;
+import queuebroker0.pojo.partition.PartitionInfoCreation;
 import queuebroker0.pojo.user.Offset;
-import queuebroker0.handler.PartitionCreator;
-import queuebroker0.handler.TopicCreator;
+import queuebroker0.handler.partition.PartitionCreator;
+import queuebroker0.handler.topic.TopicCreator;
 import queuebroker0.pojo.message.MessageInputInfo;
 import queuebroker0.pojo.Topic;
-import queuebroker0.service.BrokerInfoLoader;
+import queuebroker0.service.BrokerData;
 import queuebroker0.service.HashSolver;
 import queuebroker0.service.OffsetsInfoLoader;
 
@@ -24,7 +27,7 @@ import java.util.Optional;
 @RestController
 public class BrokerController {
 
-    private final BrokerInfoLoader brokerInfo;
+    private final BrokerData brokerInfo;
     private final TopicCreator topicCreator;
     private final PartitionCreator partitionCreator;
     private final OffsetsInfoLoader offsetsInfoLoader;
@@ -32,7 +35,7 @@ public class BrokerController {
     private final MessageSender messageSender;
     private final MessageGetter messageGetter;
 
-    public BrokerController(BrokerInfoLoader brokerInfo, TopicCreator topicCreator, PartitionCreator partitionCreator,
+    public BrokerController(BrokerData brokerInfo, TopicCreator topicCreator, PartitionCreator partitionCreator,
                             OffsetsInfoLoader offsetsInfoLoader, HashSolver hashSolver, MessageSender messageSender,
                             MessageGetter messageGetter) {
         this.brokerInfo = brokerInfo;
@@ -46,29 +49,19 @@ public class BrokerController {
 
     @GetMapping("/getBrokerInfo")
     public Map<String, Topic> getBrokerInfo() {
-        return brokerInfo.getTopics();
+        return brokerInfo.load();
     }
 
     @PostMapping("/create")
-    public HttpStatus createTopic(@RequestParam String topicName, @RequestParam String partitionQuantity) {
-        try {
-            topicCreator.create(topicName);
-            partitionCreator.createPartitionsInTopic(topicName, Integer.parseInt(partitionQuantity));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return HttpStatus.OK;
+    public HttpStatus createTopic(@RequestBody PartitionInfoCreation partitionInfoCreation) {
+        var result = topicCreator.create(partitionInfoCreation.getTopicName());
+        result = partitionCreator.create(partitionInfoCreation);
+        return result ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     @PostMapping("/addMessage")
     public HttpStatus addMessage(@RequestBody MessageInputInfo message) {
-        var result = messageSender.create(message);
-        if(!result){
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return HttpStatus.OK;
+        return messageSender.create(message) ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     @GetMapping("/getOffsets")

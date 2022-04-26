@@ -12,6 +12,10 @@ public class Topic {
     public Topic(){
     }
 
+    public Topic(String name){
+        this(name,new ArrayList<>());
+    }
+
     public Topic(String name, List<Partition> partitions) {
         this.name = name;
         this.partitions = new ArrayList<>(partitions);

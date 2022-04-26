@@ -1,6 +1,5 @@
 package queuebroker0.service;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import queuebroker0.pojo.user.Offset;
 
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Scope("singleton")
 public class OffsetsInfoLoader {
     private final Map<String, List<Offset>> offsets;
 
