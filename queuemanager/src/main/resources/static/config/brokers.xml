@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <brokers>
     <broker number="0" addressURL="http://localhost:9090"/>
-    <broker number="1" addressURL="http://localhost:9091"/>
-    <broker number="2" addressURL="http://localhost:9092"/>
+<!--    <broker number="1" addressURL="http://localhost:9091"/>-->
+<!--    <broker number="2" addressURL="http://localhost:9092"/>-->
 </brokers>

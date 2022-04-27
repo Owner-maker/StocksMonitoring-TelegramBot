@@ -1,15 +1,17 @@
 package queuemanager.pojo;
 
-public class BrokerInfoCreation {
+public class PartitionInfoCreation {
     private String topicName;
     private int partitionQuantity;
+    private int amountOfExistPartitions;
 
-    public BrokerInfoCreation() {
+    public PartitionInfoCreation() {
     }
 
-    public BrokerInfoCreation(String topicName, int partitionQuantity) {
+    public PartitionInfoCreation(String topicName, int partitionQuantity, int amountOfExistPartitions) {
         this.topicName = topicName;
         this.partitionQuantity = partitionQuantity;
+        this.amountOfExistPartitions = amountOfExistPartitions;
     }
 
     public String getTopicName() {
@@ -26,5 +28,13 @@ public class BrokerInfoCreation {
 
     public void setPartitionQuantity(int partitionQuantity) {
         this.partitionQuantity = partitionQuantity;
+    }
+
+    public int getAmountOfExistPartitions() {
+        return amountOfExistPartitions;
+    }
+
+    public void setAmountOfExistPartitions(int amountOfExistPartitions) {
+        this.amountOfExistPartitions = amountOfExistPartitions;
     }
 }

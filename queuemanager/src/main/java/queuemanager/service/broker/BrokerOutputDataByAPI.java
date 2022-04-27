@@ -1,26 +1,23 @@
 package queuemanager.service.broker;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import queuemanager.pojo.BrokerInfoCreation;
+import queuemanager.pojo.PartitionInfoCreation;
 
 @Service
-public class BrokerOutputDataByAPI implements DataOutput<HttpStatus, String, BrokerInfoCreation> {
+public class BrokerOutputDataByAPI implements DataOutput<HttpStatus, String, PartitionInfoCreation> {
     @Override
-    public HttpStatus create(String brokerURL, BrokerInfoCreation data) {
+    public HttpStatus create(String brokerURL, PartitionInfoCreation data) {
         HttpStatus response = null;
         try{
             var restTemplate = new RestTemplate();
-            var url = String.format(
-                    "%s/create?topicName=%s&partitionQuantity=%s", brokerURL,
-                    data.getTopicName(), data.getPartitionQuantity());
+            var url = String.format("%s/create", brokerURL);
+//            RequestEntity<PartitionInfoCreation> requestEntity =
             ResponseEntity<HttpStatus> responseEntity = restTemplate.exchange(url, HttpMethod.POST,
-                    null, new ParameterizedTypeReference<>() {
+                    new HttpEntity<>(data), new ParameterizedTypeReference<>() {
                     });
 
             response = responseEntity.getBody();

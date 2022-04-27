@@ -3,7 +3,8 @@ package queuemanager.handler.adminpanel;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import queuemanager.handler.adminpanel.model.AdminCommand;
-import queuemanager.pojo.BrokerInfoCreation;
+import queuemanager.pojo.PartitionInfoCreation;
+import queuemanager.pojo.Topic;
 import queuemanager.service.broker.BrokerData;
 import queuemanager.service.broker.BrokerOutputDataByAPI;
 import queuemanager.service.broker.DataOutput;
@@ -12,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CreationHandler implements AdminCommandHandler{
+public class CreationHandler implements AdminCommandHandler {
 
     private static final AdminCommandType ADMIN_COMMAND_TYPE = AdminCommandType.CREATE;
     private final BrokerData brokerData;
-    private final DataOutput<HttpStatus, String, BrokerInfoCreation> brokerOutputData;
+    private final DataOutput<HttpStatus, String, PartitionInfoCreation> brokerOutputData;
 
     public CreationHandler(BrokerData brokerData, BrokerOutputDataByAPI brokerOutputData) {
         this.brokerData = brokerData;
@@ -42,8 +43,20 @@ public class CreationHandler implements AdminCommandHandler{
             brokerData.getBrokers().forEach(broker -> brokerAddresses.add(broker.getAddressURL()));
         }
 
+        final int[] amountOfExistPartitions = {0};
         for (String brokerAddress : brokerAddresses) {
-            HttpStatus httpStatus = brokerOutputData.create(brokerAddress, new BrokerInfoCreation(command.getTopicName(), command.getPartitionQuantity()));
+
+            brokerData.getBrokers()
+                    .forEach(broker -> amountOfExistPartitions[0]+=
+                            broker.getTopics()
+                                    .getOrDefault(command.getTopicName(), new Topic(command.getTopicName(), new ArrayList<>()))
+                                    .getPartitions()
+                                    .size()
+                    );
+
+
+            HttpStatus httpStatus = brokerOutputData.create(brokerAddress,
+                    new PartitionInfoCreation(command.getTopicName(), command.getPartitionQuantity(), amountOfExistPartitions[0]));
             if (httpStatus.value() != HttpStatus.OK.value()) {
                 result = false;
             }

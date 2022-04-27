@@ -7,6 +7,9 @@ public class Broker {
     private String addressURL;
     private Map<String,Topic> topics;
 
+    public Broker(){
+    }
+
     public Broker(String addressURL, Map<String, Topic> topics) {
         this.addressURL = addressURL;
         this.topics = new HashMap<>(topics);
