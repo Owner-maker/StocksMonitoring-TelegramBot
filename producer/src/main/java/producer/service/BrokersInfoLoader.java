@@ -10,10 +10,8 @@ import producer.pojo.Broker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
-@Scope("singleton")
 public final class BrokersInfoLoader {
     public static final String CLUSTER_URL_ADDRESS = "http://localhost:8090";
 
@@ -32,7 +30,7 @@ public final class BrokersInfoLoader {
             var restTemplate = new RestTemplate();
             var url = String.format("%s/queue/getBrokers", CLUSTER_URL_ADDRESS);
             ResponseEntity<List<Broker>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
-                    null, new ParameterizedTypeReference<List<Broker>>() {
+                    null, new ParameterizedTypeReference<>() {
                     });
 
             return responseEntity.getBody();

@@ -2,6 +2,7 @@ package producer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import producer.pojo.MessageInputInfo;
 import producer.service.MessageSender;
 
 import java.util.Scanner;
@@ -22,7 +23,7 @@ public class ProducerApplication {
 		System.out.println("Your message");
 		String messageValue = scanner.next();
 
-		System.out.println(messageSender.sendMessage(new Message(key,messageValue,null,topicName,0)));
+		System.out.println(messageSender.sendMessage(new MessageInputInfo(key,messageValue,null,topicName,0)));
 
 	}
 }

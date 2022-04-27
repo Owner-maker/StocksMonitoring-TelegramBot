@@ -14,6 +14,9 @@ public class TopicCreator implements DataOutput<Boolean, String> {
         var pathToTopic = Paths.get(String.format("%s\\%s", BrokerData.LOGS_DIRECTORY_PATH, topicName));
         var topicDirectory = new File(String.valueOf(pathToTopic));
 
-        return topicDirectory.mkdir();
+        if(!topicDirectory.exists()){
+            return topicDirectory.mkdir();
+        }
+        return false;
     }
 }
