@@ -1,4 +1,4 @@
-package queuemanager.handler.adminpanel.model;
+package queuemanager.pojo;
 
 
 public class AdminCommand {
