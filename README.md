@@ -5,15 +5,17 @@
 -Spring Boot  
 -Spring Data  
 -Maven  
--MySQL (MongoDB?)
--Docker? 
+-MS SQL
   
--Telegram API  
--YH Finance API  
+-Telegram API    
   
 *Project components:*  
--Producer -> YH Finance API  
--Database -> Store Users info + subscriptions  
--Queue -> Store and Getting info about stocks etc  
--Library -> Connect to Queue, sending, getting messages  
--Consumer -> Telegram GUI client (Telegram Bot)  
+-TelegramBot (Stock exchange app) - provides GUI to sell, buy stocks, subscribe for a stock change etc.
+
+-Queue app- provides an effecient way to store messages
+ consists of: 
+    --Queue manager - manages the brokers (nodes), provides a admin panel to create topics, partitions etc.
+    --Queue brokers - provide distributed storage of messages in files
+    --Consumer(s) - provide distributed rading of messages from brokers
+ 
+-MS SQL DataBase - provides storage of users queue's offsets, subscriptions, purchase and sale information
