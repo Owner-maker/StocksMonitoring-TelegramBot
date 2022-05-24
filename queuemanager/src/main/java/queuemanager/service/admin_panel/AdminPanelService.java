@@ -1,7 +1,7 @@
 package queuemanager.service.admin_panel;
 
 import org.springframework.stereotype.Service;
-import queuemanager.handler.adminpanel.model.AdminCommand;
+import queuemanager.pojo.AdminCommand;
 import queuemanager.handler.adminpanel.AdminCommandFacade;
 
 import java.util.Scanner;

@@ -1,6 +1,6 @@
 package queuemanager.handler.adminpanel;
 
-import queuemanager.handler.adminpanel.model.AdminCommand;
+import queuemanager.pojo.AdminCommand;
 
 public interface AdminCommandHandler {
     AdminCommandType getAdminCommandHandler();

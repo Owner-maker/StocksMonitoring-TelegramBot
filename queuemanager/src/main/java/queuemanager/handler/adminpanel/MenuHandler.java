@@ -1,7 +1,7 @@
 package queuemanager.handler.adminpanel;
 
 import org.springframework.stereotype.Component;
-import queuemanager.handler.adminpanel.model.AdminCommand;
+import queuemanager.pojo.AdminCommand;
 
 @Component
 public class MenuHandler implements AdminCommandHandler {

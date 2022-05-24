@@ -2,7 +2,7 @@ package queuemanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import queuemanager.handler.adminpanel.model.AdminCommand;
+import queuemanager.pojo.AdminCommand;
 import queuemanager.service.admin_panel.AdminPanelService;
 
 import java.util.Scanner;

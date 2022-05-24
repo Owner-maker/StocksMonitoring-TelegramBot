@@ -2,12 +2,12 @@ package queuemanager.handler.adminpanel;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import queuemanager.handler.adminpanel.model.AdminCommand;
+import queuemanager.pojo.AdminCommand;
 import queuemanager.pojo.PartitionInfoCreation;
 import queuemanager.pojo.Topic;
+import queuemanager.service.broker.DataOutput;
 import queuemanager.service.broker.BrokerData;
 import queuemanager.service.broker.BrokerOutputDataByAPI;
-import queuemanager.service.broker.DataOutput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +35,11 @@ public class CreationHandler implements AdminCommandHandler {
         boolean result = true;
 
         if (command.isCreatingInSingleBroker()) {
-            brokerAddresses.add(brokerData.getBrokers().stream().
-                    filter(broker -> broker.getAddressURL().equals(command.getSingleBrokerAddress())).
+            brokerAddresses.add(brokerData.getBrokers()
+                    .stream()
+                    .filter(broker -> broker
+                            .getAddressURL()
+                            .equals(command.getSingleBrokerAddress())).
                     findFirst().get().getAddressURL());
         }
         else {
