@@ -21,11 +21,12 @@ public final class AdminPanelService {
 
     public void processCommandFacade(String commandCode) {
         switch (commandCode) {
-            case "menu":
-            case "brokers":
+            case "1":
+            case "2":
+            case "3":
                 commandFacade.processAdminCommand(new AdminCommand(commandCode));
                 break;
-            case "create":
+            case "4":
                 Scanner scanner = new Scanner(System.in);
 
                 System.out.println("topic name: ");

@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Service
 public class BrokerData {
-    private final DataInput<Optional<List<String>>, String> addressesInputXML;
-    private final DataInput<Optional<List<Broker>>, List<String>> infoInputAPI;
+    private final DataInput<Optional<List<Broker>>, String> addressesInputXML;
+    private final DataInput<Optional<List<Broker>>, List<Broker>> infoInputAPI;
     private List<Broker> brokers;
 
     public BrokerData(BrokerAddressesInputFromXML addressesInputXML,

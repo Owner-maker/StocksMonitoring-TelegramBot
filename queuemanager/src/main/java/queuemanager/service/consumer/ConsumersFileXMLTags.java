@@ -2,8 +2,10 @@ package queuemanager.service.consumer;
 
 public enum ConsumersFileXMLTags {
     GROUP_ITEM_NAME("group"),
+    GROUP_ID_ITEM("id"),
     CONSUMER_ITEM_NAME("consumer"),
-    BROKER_ADDRESS_ITEM_NAME("addressURL");
+    CONSUMER_HOST("host"),
+    CONSUMER_PORT("port");
 
     private final String tagName;
 

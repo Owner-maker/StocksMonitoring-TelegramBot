@@ -13,12 +13,18 @@ public class QueueApplication {
         var context = SpringApplication.run(QueueApplication.class, args);
 
         var service = (AdminPanelService) context.getBean("adminPanelService");
-        service.getCommandFacade().processAdminCommand(new AdminCommand("menu"));
+        service.getCommandFacade().processAdminCommand(new AdminCommand("1"));
 
-
-        Scanner scanner = new Scanner(System.in);
-        String command = scanner.next();
-        service.processCommandFacade(command);
+        var scanner = new Scanner(System.in);
+        while (true) {
+            String command = scanner.next();
+            if (command.equals("0")){
+                System.out.println("- close admin panel -");
+                break;
+            }
+            service.processCommandFacade(command);
+            scanner.reset();
+        }
     }
 }
 

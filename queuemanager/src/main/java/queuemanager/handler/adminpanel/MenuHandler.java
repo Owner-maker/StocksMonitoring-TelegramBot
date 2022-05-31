@@ -20,10 +20,12 @@ public class MenuHandler implements AdminCommandHandler {
         builder.append("\n---------------------------------\n")
                 .append("Print the menu item:\n")
                 .append("---------------------------------\n")
-                .append("menu -> to print menu\n")
-                .append("create -> to create topic and partitions\n")
-                .append("brokers -> to show available brokers\n")
-                .append("---------------------------------\n");
+                .append("0 -> to stop console\n")
+                .append("1 -> to print menu\n")
+                .append("2 -> to show available brokers\n")
+                .append("3 -> to show available consumers\n")
+                .append("4 -> to create topic and partitions\n")
+                .append("---------------------------------");
         System.out.println(builder);
         return true;
     }

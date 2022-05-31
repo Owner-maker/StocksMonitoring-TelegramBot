@@ -31,6 +31,13 @@ public class CreationHandler implements AdminCommandHandler {
 
     @Override
     public boolean handleAdminCommand(AdminCommand command) {
+        if (brokerData.getBrokers().isEmpty() ||
+                (command.isCreatingInSingleBroker() &&
+                        brokerData.getBrokers().stream()
+                                .anyMatch(broker -> broker.getHost().equals(command.getSingleBrokerAddress())))){
+            return false;
+        }
+
         List<String> brokerAddresses = new ArrayList<>();
         boolean result = true;
 
@@ -38,12 +45,12 @@ public class CreationHandler implements AdminCommandHandler {
             brokerAddresses.add(brokerData.getBrokers()
                     .stream()
                     .filter(broker -> broker
-                            .getAddressURL()
+                            .getHost()
                             .equals(command.getSingleBrokerAddress())).
-                    findFirst().get().getAddressURL());
+                    findFirst().get().getHost());
         }
         else {
-            brokerData.getBrokers().forEach(broker -> brokerAddresses.add(broker.getAddressURL()));
+            brokerData.getBrokers().forEach(broker -> brokerAddresses.add(broker.getHost()));
         }
 
         final int[] amountOfExistPartitions = {0};

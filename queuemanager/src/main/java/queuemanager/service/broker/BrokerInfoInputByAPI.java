@@ -9,40 +9,38 @@ import org.springframework.web.client.RestTemplate;
 import queuemanager.pojo.Broker;
 import queuemanager.service.URLAddressAvailability;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BrokerInfoInputByAPI implements DataInput<Optional<List<Broker>>, List<String>> {
-
-    private URLAddressAvailability urlAddressAvailability;
+public class BrokerInfoInputByAPI implements DataInput<Optional<List<Broker>>, List<Broker>> {
+    private static final String HTTP_GET_BROKERS = "http://%s:%s/getBrokerInfo";
+    private final URLAddressAvailability urlAddressAvailability;
 
     public BrokerInfoInputByAPI(URLAddressAvailability urlAddressAvailability) {
         this.urlAddressAvailability = urlAddressAvailability;
     }
 
     @Override
-    public Optional<List<Broker>> getData(List<String> brokersAddresses) throws RestClientException {
-        List<Broker> brokers = new ArrayList<>();
-        for (String brokerAddress : brokersAddresses) {
-            var connection = urlAddressAvailability.isAddressAvailable(
-                    brokerAddress, URLAddressAvailability.DEFAULT_TIMEOUT);
-            if (connection) {
+    public Optional<List<Broker>> getData(List<Broker> brokers) throws RestClientException {
+        List<Broker> brokersLoad = new ArrayList<>();
+        for (Broker broker : brokers) {
+            if (urlAddressAvailability.isAddressAvailable(
+                    broker.getHost(),
+                    broker.getPort(),
+                    URLAddressAvailability.DEFAULT_TIMEOUT)) {
                 var restTemplate = new RestTemplate();
-                var url = String.format("%s/getBrokerInfo", brokerAddress);
+                var url = String.format(HTTP_GET_BROKERS, broker.getHost(), broker.getPort());
                 ResponseEntity<Broker> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
                         null, new ParameterizedTypeReference<>() {
                         });
 
                 Broker response = responseEntity.getBody();
-                brokers.add(response);
+                brokersLoad.add(response);
             }
 
         }
-        return Optional.of(brokers);
+        return Optional.of(brokersLoad);
     }
 }

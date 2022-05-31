@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <consumers>
     <group id="0">
-        <consumer addressURL="http://localhost:9000" />
-        <consumer addressURL="http://localhost:9001" />
+        <consumer host="localhost" port="9000"/>
+        <consumer host="localhost" port="9001"/>
     </group>
     <group id="1">
-        <consumer addressURL="http://localhost:9010" />
-        <consumer addressURL="http://localhost:9011" />
+        <consumer host="localhost" port="9010"/>
     </group>
 </consumers>

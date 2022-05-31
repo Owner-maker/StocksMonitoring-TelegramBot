@@ -2,15 +2,15 @@ package queuemanager.handler.adminpanel;
 
 import org.springframework.stereotype.Component;
 import queuemanager.pojo.AdminCommand;
+import queuemanager.pojo.Broker;
 import queuemanager.service.broker.BrokerData;
 
-import java.util.ArrayList;
-
 @Component
-public class AvailableBrokersHandler implements AdminCommandHandler{
+public class AvailableBrokersHandler implements AdminCommandHandler {
 
     private static final AdminCommandType ADMIN_COMMAND_TYPE = AdminCommandType.AVAILABLE_BROKERS_ADDRESSES;
-    private BrokerData brokerData;
+    private static final String HTTP_ADDRESS_PATTERN = "http://%s:%s";
+    private final BrokerData brokerData;
 
     public AvailableBrokersHandler(BrokerData brokerData) {
         this.brokerData = brokerData;
@@ -23,21 +23,19 @@ public class AvailableBrokersHandler implements AdminCommandHandler{
 
     @Override
     public boolean handleAdminCommand(AdminCommand command) {
-        var brokersAddresses = new ArrayList<String>();
-        brokerData.getBrokers().forEach(broker -> brokersAddresses.add(broker.getAddressURL()));
-
-        if (!brokersAddresses.isEmpty()) {
-            var builder = new StringBuilder();
-            builder.append("\nAvailable brokers:\n");
-
-            for (String brokerAddress : brokersAddresses) {
-                builder.append(String.format("%s%n", brokerAddress));
-            }
-            System.out.println(builder);
-        }
-        else {
+        var brokers = brokerData.getBrokers();
+        if (brokers.isEmpty()) {
             System.err.println("There are not any available brokers in cluster");
+            return false;
         }
+
+        var builder = new StringBuilder();
+        builder.append("\nAvailable brokers:\n");
+
+        for (Broker broker : brokers) {
+            builder.append(String.format(HTTP_ADDRESS_PATTERN, broker.getHost(), broker.getPort()));
+        }
+        System.out.println(builder);
 
         return true;
     }

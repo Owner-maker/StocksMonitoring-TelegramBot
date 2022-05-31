@@ -4,9 +4,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum AdminCommandType {
-    MENU("menu"),
-    AVAILABLE_BROKERS_ADDRESSES("brokers"),
-    CREATE("create");
+    MENU("1"),
+    AVAILABLE_BROKERS_ADDRESSES("2"),
+    AVAILABLE_CONSUMERS_ADDRESSES("3"),
+    CREATE("4");
 
 
     private final String commandCode;
