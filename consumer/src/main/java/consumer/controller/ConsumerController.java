@@ -1,18 +1,33 @@
 package consumer.controller;
 
-import consumer.models.Offset;
 import consumer.repository.OffsetRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import consumer.service.ConsumerData;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/consumer")
 public class ConsumerController {
-    @Autowired
-    private OffsetRepository offsetRepository;
+    private final ConsumerData consumerData;
 
-    @GetMapping("/getoffset")
-    public Offset getOffset(){
-        return offsetRepository.findByUserIdAndTopicName(1L,"test").get();
+    public ConsumerController(ConsumerData consumerData) {
+        this.consumerData = consumerData;
+    }
+
+    @PostMapping("/addGroupId")
+    public HttpStatus addGroupId(@RequestParam int groupId){
+        consumerData.setGroupId(groupId);
+        return HttpStatus.OK;
+    }
+
+    @PostMapping("/addLeaderGroupAddress")
+    public HttpStatus addLeaderGroupAddress(@RequestParam String address){
+        consumerData.setGroupLeaderAddress(address);
+        return HttpStatus.OK;
+    }
+
+    @GetMapping("/isGroupLeader")
+    public boolean isGroupLeader(){
+        return consumerData.isLeaderGroup();
     }
 }
