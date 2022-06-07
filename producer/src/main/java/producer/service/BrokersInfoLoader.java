@@ -1,6 +1,5 @@
 package producer.service;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +9,8 @@ import producer.pojo.Broker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
-@Scope("singleton")
 public final class BrokersInfoLoader {
     public static final String CLUSTER_URL_ADDRESS = "http://localhost:8090";
 
