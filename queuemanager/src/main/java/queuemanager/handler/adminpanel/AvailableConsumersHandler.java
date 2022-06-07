@@ -2,7 +2,6 @@ package queuemanager.handler.adminpanel;
 
 import org.springframework.stereotype.Component;
 import queuemanager.pojo.AdminCommand;
-import queuemanager.pojo.Consumer;
 import queuemanager.service.consumer.ConsumerData;
 
 @Component
@@ -23,7 +22,7 @@ public class AvailableConsumersHandler implements AdminCommandHandler {
 
     @Override
     public boolean handleAdminCommand(AdminCommand command) {
-        var consumers = consumerData.getConsumers();
+        var consumers = consumerData.getConsumerGroups();
         if (consumers.isEmpty()) {
             System.err.println("There are not any available consumers in cluster");
             return false;
@@ -32,11 +31,11 @@ public class AvailableConsumersHandler implements AdminCommandHandler {
         var builder = new StringBuilder();
         builder.append("\nAvailable consumers:\n");
 
-        for (Consumer consumer : consumers) {
-            builder.append(String.format(HTTP_ADDRESS_PATTERN, consumer.getHost(), consumer.getPort()));
-        }
+        consumers.forEach(group ->
+                group.getConsumers().forEach(consumer ->
+                        builder.append(String.format(HTTP_ADDRESS_PATTERN, consumer.getHost(), consumer.getPort()))
+                ));
         System.out.println(builder);
-
         return true;
     }
 }

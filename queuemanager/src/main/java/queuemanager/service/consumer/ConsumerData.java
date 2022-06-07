@@ -2,42 +2,55 @@ package queuemanager.service.consumer;
 
 import org.springframework.stereotype.Service;
 import queuemanager.pojo.Consumer;
+import queuemanager.pojo.ConsumerGroup;
 import queuemanager.service.URLAddressAvailability;
 import queuemanager.service.broker.DataInput;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ConsumerData {
-    private final DataInput<List<Consumer>, String> addressesInputXML;
+    private final DataInput<Map<String, ConsumerGroup>, String> addressesInputXML;
     private final URLAddressAvailability urlAddressAvailability;
-    private List<Consumer> consumers;
+    private Map<String, ConsumerGroup> consumerGroups;
 
-    public ConsumerData(ConsumerAddressesInputFromXML addressesInputXML,
+    public ConsumerData(ConsumersInputFromXML addressesInputXML,
                         URLAddressAvailability urlAddressAvailability) {
         this.addressesInputXML = addressesInputXML;
         this.urlAddressAvailability = urlAddressAvailability;
-        this.consumers = new ArrayList<>();
+        this.consumerGroups = new HashMap<>();
     }
 
-    public List<Consumer> getConsumers() {
-        if (!this.consumers.isEmpty()) {
-            return new ArrayList<>(this.consumers);
+    public Map<String, ConsumerGroup> getConsumerGroups() {
+        if (!this.consumerGroups.isEmpty()) {
+            return new HashMap<>(this.consumerGroups);
         }
         else {
-            List<Consumer> consumersLoad = new ArrayList<>();
-            var consumersFromXML = addressesInputXML.getData(ConsumerAddressesInputFromXML.CONSUMERS_XML_FILE_PATH);
-            for (Consumer consumer : consumersFromXML) {
-                if (urlAddressAvailability.isAddressAvailable(
-                        consumer.getHost(),
-                        consumer.getPort(),
-                        URLAddressAvailability.DEFAULT_TIMEOUT)) {
-                    consumersLoad.add(consumer);
-                }
-            }
-            this.consumers = consumersLoad;
-            return consumersLoad;
+            var consumersGroupsLoad = new HashMap<String, ConsumerGroup>();
+            var consumersFromXML = addressesInputXML.getData(ConsumersInputFromXML.CONSUMERS_XML_FILE_PATH);
+
+            consumersFromXML.values()
+                    .forEach(group -> {
+                        var isGroupLeaderAvailableCreation = true;
+                        var consumerGroupLoad = new ConsumerGroup(group.getGroupId(), group.getTopicName());
+                        for (Consumer consumer : group.getConsumers()) {
+                            if (urlAddressAvailability.isAddressAvailable(
+                                    consumer.getHost(),
+                                    consumer.getPort(),
+                                    URLAddressAvailability.DEFAULT_TIMEOUT)) {
+                                if (isGroupLeaderAvailableCreation) {
+                                    group.setGroupLeader(consumer);
+                                    isGroupLeaderAvailableCreation = false;
+                                }
+                                consumerGroupLoad.addConsumer(consumer);
+                            }
+                        }
+                        consumersGroupsLoad.put(consumerGroupLoad.getGroupId(), consumerGroupLoad);
+                    });
+
+            this.consumerGroups = consumersGroupsLoad;
+            return consumersGroupsLoad;
         }
     }
 }

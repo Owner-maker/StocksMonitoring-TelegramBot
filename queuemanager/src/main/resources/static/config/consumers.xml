@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <consumers>
-    <group id="0">
+    <group id="0" topic="Test">
         <consumer host="localhost" port="9000"/>
         <consumer host="localhost" port="9001"/>
     </group>
-    <group id="1">
+    <group id="1" topic="Test2">
         <consumer host="localhost" port="9010"/>
     </group>
 </consumers>

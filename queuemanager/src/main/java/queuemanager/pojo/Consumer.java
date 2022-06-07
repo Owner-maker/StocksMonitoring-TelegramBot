@@ -3,12 +3,13 @@ package queuemanager.pojo;
 public class Consumer {
     private String host;
     private int port;
-    private int groupId;
+    private String groupId;
+    private ConsumerReadingInfo readingInfo;
 
     public Consumer() {
     }
 
-    public Consumer(String host, int port, int groupId) {
+    public Consumer(String host, int port, String groupId) {
         this.host = host;
         this.port = port;
         this.groupId = groupId;
@@ -30,11 +31,19 @@ public class Consumer {
         this.port = port;
     }
 
-    public int getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public ConsumerReadingInfo getReadingInfo() {
+        return readingInfo;
+    }
+
+    public void setReadingInfo(ConsumerReadingInfo readingInfo) {
+        this.readingInfo = readingInfo;
     }
 }
