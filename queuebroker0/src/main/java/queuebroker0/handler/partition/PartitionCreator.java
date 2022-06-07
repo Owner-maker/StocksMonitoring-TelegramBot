@@ -22,17 +22,17 @@ public class PartitionCreator implements DataOutput<Boolean, PartitionInfoCreati
     @Override
     public Boolean create(PartitionInfoCreation partitionInfoCreation) {
         String topicName = partitionInfoCreation.getTopicName();
-        int amountOfExistPartitions = partitionInfoCreation.getPartitionQuantity();
+        int amountOfExistPartitions = partitionInfoCreation.getAmountOfExistPartitions();
         int partitionQuantity = partitionInfoCreation.getPartitionQuantity();
 
         var pathToTopic = Paths.get(String.format("%s\\%s", BrokerData.LOGS_DIRECTORY_PATH, topicName));
-        boolean result = true;
+        boolean result = false;
 
         if (Files.exists(pathToTopic)) {
             for (int i = amountOfExistPartitions; i < amountOfExistPartitions + partitionQuantity; i++) {
                 var partitionDirectory = new File(String.format("%s\\%d", pathToTopic,i));
                 result = partitionDirectory.mkdir();
-                segmentCreator.create(new SegmentInfo(topicName,partitionQuantity));
+                segmentCreator.create(new SegmentInfo(topicName,i));
             }
         }
         return result;

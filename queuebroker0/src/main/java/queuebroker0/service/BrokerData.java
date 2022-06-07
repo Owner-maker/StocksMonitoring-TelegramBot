@@ -12,6 +12,7 @@ import java.util.Map;
 public final class BrokerData implements DataLoad<Map<String, Topic>> {
     public static final String LOGS_DIRECTORY_PATH = String.format("%s%s", System.getProperty("user.dir"), "\\src\\main\\resources\\static\\logs");
 
+
     private final DataInput<Map<String, Topic>, String> topicDataGetter;
     private final DataInput<List<Partition>, String> partitionDataGetter;
 //    private final Map<String, Topic> topics;
@@ -20,7 +21,6 @@ public final class BrokerData implements DataLoad<Map<String, Topic>> {
                       DataInput<List<Partition>, String> partitionDataGetter) {
         this.topicDataGetter = topicDataGetter;
         this.partitionDataGetter = partitionDataGetter;
-
 //        topics = topicDataGetter.getData(LOGS_DIRECTORY_PATH);
 //        topics.values().forEach(topic -> topic.setPartitions(
 //                partitionDataGetter.getData(String.format("%s%s", LOGS_DIRECTORY_PATH, topic.getName()))));
@@ -34,7 +34,9 @@ public final class BrokerData implements DataLoad<Map<String, Topic>> {
     public Map<String, Topic> load() {
         var topicsToReturn = topicDataGetter.getData(LOGS_DIRECTORY_PATH);
         topicsToReturn.values().forEach(topic -> topic.setPartitions(
-                partitionDataGetter.getData(String.format("%s\\%s", LOGS_DIRECTORY_PATH, topic.getName()))));
+                partitionDataGetter.getData(String.format("%s\\%s", LOGS_DIRECTORY_PATH, topic.getName()))
+                )
+        );
         return topicsToReturn;
     }
 }

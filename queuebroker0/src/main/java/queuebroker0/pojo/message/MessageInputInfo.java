@@ -9,9 +9,6 @@ public class MessageInputInfo {
     private String topicName;
     private int partitionNumber;
 
-    public MessageInputInfo() {
-    }
-
     public MessageInputInfo(String key, String value, Timestamp timestamp, String topicName, int partitionNumber) {
         this.key = key;
         this.value = value;
