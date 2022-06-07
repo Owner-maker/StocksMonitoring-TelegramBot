@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public class ConsumerData {
     private int groupId;
     private boolean isLeaderGroup;
-    private String groupLeaderAddress;
+    private String leaderGroupAddress;
 
     public ConsumerData() {
         isLeaderGroup = false;
@@ -28,11 +28,11 @@ public class ConsumerData {
         isLeaderGroup = leaderGroup;
     }
 
-    public String getGroupLeaderAddress() {
-        return groupLeaderAddress;
+    public String getLeaderGroupAddress() {
+        return leaderGroupAddress;
     }
 
-    public void setGroupLeaderAddress(String groupLeaderAddress) {
-        this.groupLeaderAddress = groupLeaderAddress;
+    public void setLeaderGroupAddress(String leaderGroupAddress) {
+        this.leaderGroupAddress = leaderGroupAddress;
     }
 }

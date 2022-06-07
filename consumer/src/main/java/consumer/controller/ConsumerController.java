@@ -1,6 +1,5 @@
 package consumer.controller;
 
-import consumer.repository.OffsetRepository;
 import consumer.service.ConsumerData;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class ConsumerController {
 
     @PostMapping("/addLeaderGroupAddress")
     public HttpStatus addLeaderGroupAddress(@RequestParam String address){
-        consumerData.setGroupLeaderAddress(address);
+        consumerData.setLeaderGroupAddress(address);
         return HttpStatus.OK;
     }
 
