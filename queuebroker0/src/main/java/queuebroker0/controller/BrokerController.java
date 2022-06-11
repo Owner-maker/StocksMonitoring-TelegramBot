@@ -24,7 +24,7 @@ import java.util.Optional;
 public class BrokerController {
     @Value("${server.port}")
     private String brokerPort;
-    private static final String BROKER_ADDRESS = "http://localhost";
+    private static final String BROKER_ADDRESS_LOCALHOST = "http://localhost";
 
     private final BrokerData brokerData;
     private final TopicCreator topicCreator;
@@ -47,7 +47,7 @@ public class BrokerController {
     @GetMapping("/getBrokerInfo")
     public Broker getBrokerData() {
         return new Broker(
-                String.format("%s:%s", BROKER_ADDRESS, brokerPort),
+                String.format("%s:%s", BROKER_ADDRESS_LOCALHOST, brokerPort),
                 brokerData.load()
         );
     }
