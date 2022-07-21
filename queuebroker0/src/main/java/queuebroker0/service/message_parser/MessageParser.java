@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
 @Service
 public class MessageParser implements DataProcessor<Message, String> {
 
-    private static final String REGULAR_EXPRESSION_PARSE_MESSAGE = "key: (.*) timestamp: (\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) value: (.*)";
+    private static final String REGULAR_EXPRESSION_PARSE_MESSAGE =
+            "key: (.*) timestamp: (\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}) value: (.*)";
     private static final Pattern PATTERN_PARSE_MESSAGE = Pattern.compile(REGULAR_EXPRESSION_PARSE_MESSAGE);
 
     @Override

@@ -1,14 +1,18 @@
 package queuemanager.pojo;
 
+import queuemanager.service.consumer.ConsumersInputFromXML;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsumerGroup {
     private String groupId;
     private Consumer groupLeader;
     private List<Consumer> consumers;
-    private String topicName;
+    private String topicName = ConsumersInputFromXML.BASIC_TOPIC_VALUE;
 
     public ConsumerGroup() {
+        consumers = new ArrayList<>();
     }
 
     public ConsumerGroup(String groupId, String topicName) {

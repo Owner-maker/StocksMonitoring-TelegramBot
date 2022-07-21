@@ -31,7 +31,7 @@ public class AvailableConsumersHandler implements AdminCommandHandler {
         var builder = new StringBuilder();
         builder.append("\nAvailable consumers:\n");
 
-        consumers.forEach(group ->
+        consumers.values().forEach(group ->
                 group.getConsumers().forEach(consumer ->
                         builder.append(String.format(HTTP_ADDRESS_PATTERN, consumer.getHost(), consumer.getPort()))
                 ));

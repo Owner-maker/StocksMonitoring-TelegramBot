@@ -8,3 +8,5 @@ public class HashSolver {
         return Math.abs(key.hashCode()%partitionQuantity);
     }
 }
+
+

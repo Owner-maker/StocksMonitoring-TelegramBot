@@ -1,5 +1,6 @@
 package consumer.pojo.message;
 
+
 import java.sql.Timestamp;
 
 public class Message {
@@ -9,6 +10,7 @@ public class Message {
 
     public Message() {
     }
+
 
     public Message(String key, Timestamp timestamp, String value) {
         this.key = key;
