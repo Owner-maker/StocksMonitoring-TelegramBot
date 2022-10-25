@@ -19,3 +19,6 @@
     --Consumer(s) - provide distributed rading of messages from brokers
  
 -MS SQL DataBase - provides storage of users queue's offsets, subscriptions, purchase and sale information
+
+
+**Still in progress**
