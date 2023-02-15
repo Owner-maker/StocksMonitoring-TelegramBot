@@ -20,5 +20,12 @@
  
 -MS SQL DataBase - provides storage of users queue's offsets, subscriptions, purchase and sale information
 
+## Queue scheme
+
+![image](queue_scheme.png)
+
+## DB diagram
+
+![image](sql_db_diagram.png)
 
 **Still in progress**
